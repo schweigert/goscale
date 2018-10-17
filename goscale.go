@@ -63,6 +63,7 @@ func handle(addr string, peer1 *lampper.Peer) {
 
 func pipe(wg *sync.WaitGroup, peer1, peer2 *lampper.Peer) {
 	defer wg.Done()
+	defer peer1.Close()
 
 	for {
 		bytes, err := peer1.ReadBytes(1)
