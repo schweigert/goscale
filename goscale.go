@@ -19,6 +19,11 @@ func main() {
 		panic(err)
 	}
 
+	log.Println("starting on:", bind)
+	for i := 0; i < size; i++ {
+		log.Println("EP", i, "->", getAddr(i))
+	}
+
 	service, err := lampper.Listen("tcp", bind)
 	if err != nil {
 		panic(err)
@@ -26,11 +31,14 @@ func main() {
 
 	for {
 		peer := service.Accept()
-		go handle(randomAddr(rand.Intn(size)), peer)
+		random := rand.Intn(size)
+		addr := getAddr(random)
+		log.Println("Routing to EP", random, "->", addr)
+		go handle(addr, peer)
 	}
 }
 
-func randomAddr(el int) string {
+func getAddr(el int) string {
 	elStr := strconv.Itoa(el)
 	return os.Getenv("EP_" + elStr)
 }
